@@ -45,10 +45,10 @@
 Notora follows **Clean Architecture** principles, enforcing strict separation of concerns across Data, Domain, and Presentation layers:
 
 ```text
-com.example.notora/
+app/src/main/java/com/example/notora/
 │
 ├── common/                  # Application-wide utilities and helper classes
-│   └── util/                # AppUtils, ColorUtils, DateTimeUtils, StringUtils, UiUtils, etc.
+│   └── util/                # AppUtils, ColorUtils, DateTimeUtils, StringUtils, UiUtils, ValidationUtils
 │
 ├── data/                    # Data Layer (Data Sources, Database, Repositories)
 │   ├── backup/              # Database Backup/Restore manager & file exporters
@@ -66,25 +66,28 @@ com.example.notora/
 │   ├── editor/              # Rich text document model, span types, serializer, and state
 │   ├── model/               # Note, Category, Tag, ChecklistItem, Attachment, etc.
 │   ├── repository/          # Domain repository interfaces
-│   ├── usecase/             # Feature use cases (Note, Category, Tag, Template, Revision)
+│   ├── usecase/             # Feature use cases (category/, note/, revision/, tag/, template/)
 │   └── util/                # Date grouper and domain helper utilities
 │
-└── ui/                      # Presentation Layer (Jetpack Compose UI & ViewModels)
-    ├── archive/             # Archive Screen & ViewModel
-    ├── calendar/            # Calendar Screen, Header, & ViewModel
-    ├── categories/          # Categories management Screen & ViewModel
-    ├── components/          # Reusable UI components (Rich Text Toolbar, NoteCard, ColorPicker, etc.)
-    ├── editor/              # Rich Text Note Editor Screen, ViewModel, and Visual Transformations
-    ├── home/                # Home Screen, Drawer, Notes Grid, and Speed Dial FAB
-    ├── navigation/          # NavGraph, Screen destinations, and Cradled Bottom Bar / Rail
-    ├── revisions/           # Note Version History Screen & ViewModel
-    ├── search/              # Global Search Screen & ViewModel
-    ├── settings/            # App Preferences, Appearance, & Backup Cards
-    ├── splash/              # Splash Screen
-    ├── tags/                # Tags management Screen & ViewModel
-    ├── templates/           # Templates selection/creation Screen & ViewModel
-    ├── theme/               # Material 3 Theme, Colors, Typography, Dimensions
-    └── trash/               # Trash Screen & ViewModel
+├── ui/                      # Presentation Layer (Jetpack Compose UI & ViewModels)
+│   ├── archive/             # Archive Screen & ViewModel
+│   ├── calendar/            # Calendar Screen, Header, & ViewModel
+│   ├── categories/          # Categories management Screen & ViewModel
+│   ├── components/          # Reusable UI components (common/, toolbar/, NoteCard, RichTextToolbar, etc.)
+│   ├── editor/              # Rich Text Note Editor Screen, ViewModel, and Visual Transformations
+│   ├── home/                # Home Screen, Drawer, Notes Grid, and Speed Dial FAB
+│   ├── navigation/          # NavGraph, Screen destinations, and Cradled Bottom Bar / Rail
+│   ├── revisions/           # Note Version History Screen & ViewModel
+│   ├── search/              # Global Search Screen & ViewModel
+│   ├── settings/            # App Preferences, Appearance, & Backup Cards
+│   ├── splash/              # Splash Screen
+│   ├── tags/                # Tags management Screen & ViewModel
+│   ├── templates/           # Templates selection/creation Screen & ViewModel
+│   ├── theme/               # Material 3 Theme, Colors, Typography, Dimensions, ColorPalette
+│   └── trash/               # Trash Screen & ViewModel
+│
+├── MainActivity.kt          # Single Activity entry point & theme initialization
+└── NotoraApplication.kt    # Application class annotated with @HiltAndroidApp
 ```
 
 ---
@@ -101,7 +104,7 @@ com.example.notora/
 
 1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/your-username/Notora.git
+   git clone https://github.com/hammad-ahmed-android-engineer/Notora.git
    cd Notora
    ```
 
@@ -133,4 +136,4 @@ Run unit tests via Gradle:
 
 ## 📄 License
 
-This project is open source and available under the [MIT License](LICENSE).
+This project is open source and available under the [Apache License 2.0](LICENSE).
