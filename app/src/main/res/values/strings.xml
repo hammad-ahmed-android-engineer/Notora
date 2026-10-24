@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- App Identity & Brand -->
+    <string name="app_name">Notora</string>
+    <string name="app_brand_title">NOTORA</string>
+    <string name="app_tagline">Capture. Organize. Elevate.</string>
+    <string name="shortcut_new_note">Create New Note</string>
+    <string name="shortcut_new_checklist">Create Checklist</string>
+
+    <!-- General Actions & Common -->
+    <string name="action_save">Save</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_confirm">Confirm</string>
+    <string name="action_delete">Delete</string>
+    <string name="action_edit">Edit</string>
+    <string name="action_clear">Clear</string>
+    <string name="action_close">Close</string>
+    <string name="action_back">Back</string>
+    <string name="action_search">Search</string>
+    <string name="action_restore">Restore</string>
+    <string name="action_ok">OK</string>
+    <string name="action_create">Create</string>
+    <string name="action_duplicate">Duplicate</string>
+    <string name="action_archive">Archive</string>
+    <string name="action_unarchive">Unarchive</string>
+    <string name="action_clear_all">Clear All</string>
+    <string name="action_pin">Pin</string>
+    <string name="action_favorite">Favorite</string>
+    <string name="action_color">Color</string>
+    <string name="action_attach_file">Attach File</string>
+    <string name="action_more_options">More Options</string>
+
+    <!-- Navigation Drawer & Rail -->
+    <string name="nav_notes">All Notes</string>
+    <string name="nav_categories">Categories &amp; Folders</string>
+    <string name="nav_tags">Tags</string>
+    <string name="nav_calendar">Daily Calendar</string>
+    <string name="nav_templates">Templates</string>
+    <string name="nav_archive">Archive</string>
+    <string name="nav_trash">Trash</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Bottom Nav Labels (Concise 1-word) -->
+    <string name="nav_bottom_notes">Notes</string>
+    <string name="nav_bottom_folders">Folders</string>
+    <string name="nav_create_note">Create Note</string>
+    <string name="nav_bottom_calendar">Calendar</string>
+    <string name="nav_bottom_archive">Archive</string>
+    <string name="nav_bottom_settings">Settings</string>
+
+    <!-- Home Screen -->
+    <string name="home_search_placeholder">Search title, content, tags…</string>
+    <string name="home_new_note">New Note</string>
+    <string name="home_new_checklist">New Checklist</string>
+    <string name="home_section_pinned">PINNED</string>
+    <string name="home_empty_title">Your canvas is clean</string>
+    <string name="home_empty_desc">Capture your thoughts, ideas, and checklists anytime</string>
+    <string name="home_empty_search_title">No matching notes found</string>
+    <string name="home_empty_search_desc">Try a different search query or clear filters</string>
+    <string name="home_action_create_note">Create Note</string>
+    <string name="home_filter_pinned">Pinned</string>
+    <string name="home_filter_favorites">Favorites</string>
+    <string name="home_toggle_layout">Toggle Layout</string>
+    <string name="home_open_drawer">Open Drawer</string>
+
+    <!-- Note Editor Screen -->
+    <string name="editor_title_placeholder">Note Title…</string>
+    <string name="editor_content_placeholder">Start writing your thoughts, ideas, or notes here…</string>
+    <string name="editor_select_folder">Select Folder</string>
+    <string name="editor_no_folder">No Folder</string>
+    <string name="editor_folder_label">Folder</string>
+    <string name="editor_attachments_title">Attachments</string>
+    <string name="editor_delete_attachment">Delete Attachment</string>
+    <string name="editor_menu_version_history">Version History</string>
+    <string name="editor_menu_duplicate">Duplicate Note</string>
+    <string name="editor_menu_archive">Archive Note</string>
+    <string name="editor_menu_delete">Move to Trash</string>
+    <string name="editor_saved_status">Saved</string>
+    <string name="editor_word_and_reading_time">%1$d words · %2$d min</string>
+
+    <!-- Note Card Actions -->
+    <string name="notecard_pin">Pin to Top</string>
+    <string name="notecard_unpin">Unpin Note</string>
+    <string name="notecard_favorite">Add to Favorites</string>
+    <string name="notecard_unfavorite">Remove from Favorites</string>
+    <string name="notecard_reminder">Reminder</string>
+
+    <!-- Categories Screen -->
+    <string name="categories_screen_title">Categories &amp; Folders</string>
+    <string name="categories_add_button">Add Category</string>
+    <string name="categories_empty_title">No categories yet</string>
+    <string name="categories_empty_desc">Group and organize your notes by creating folders</string>
+    <string name="categories_dialog_new_title">New Folder</string>
+    <string name="categories_dialog_edit_title">Edit Folder</string>
+    <string name="categories_name_label">Folder Name</string>
+    <string name="categories_name_placeholder">e.g. Work, Ideas, Travel</string>
+    <string name="categories_error_empty">Folder name cannot be empty</string>
+
+    <!-- Tags Screen -->
+    <string name="tags_screen_title">Tags &amp; Keywords</string>
+    <string name="tags_add_button">Add Tag</string>
+    <string name="tags_empty_title">No tags created yet</string>
+    <string name="tags_empty_desc">Tags help you cross-reference and categorize notes quickly</string>
+    <string name="tags_dialog_new_title">Create New Tag</string>
+    <string name="tags_name_label">Tag Name</string>
+    <string name="tags_name_placeholder">e.g. project, research, urgent</string>
+    <string name="tags_error_invalid">Tag name cannot contain spaces or special characters</string>
+
+    <!-- Calendar Screen -->
+    <string name="calendar_screen_title">Daily Calendar</string>
+    <string name="calendar_new_daily_note">New Daily Note</string>
+    <string name="calendar_empty_title">No notes for this date</string>
+    <string name="calendar_empty_desc">Tap + to schedule or write a note for today</string>
+    <string name="calendar_change_date">Change</string>
+    <string name="calendar_select_date">Select Date</string>
+    <string name="calendar_daily_reflection_template">Today\'s Reflection:\n\nKey Tasks:\n- [ ] </string>
+
+    <!-- Search Screen -->
+    <string name="search_screen_placeholder">Search title, content, tags…</string>
+    <string name="search_empty_initial_title">Type to search your notes</string>
+    <string name="search_empty_initial_desc">Search across titles, rich text content, and tags</string>
+    <string name="search_empty_results_title">No matching notes found</string>
+    <string name="search_empty_results_desc">Search across titles, rich text content, and tags</string>
+
+    <!-- Archive Screen -->
+    <string name="archive_screen_title">Archived Notes</string>
+    <string name="archive_empty_title">Archive is empty</string>
+    <string name="archive_empty_desc">Notes you archive are safely stored here out of your main view</string>
+
+    <!-- Trash Screen -->
+    <string name="trash_screen_title">Trash</string>
+    <string name="trash_empty_title">Trash is empty</string>
+    <string name="trash_empty_desc">Items deleted from your notebook will appear here</string>
+    <string name="trash_action_empty_trash">Empty Trash</string>
+    <string name="trash_action_delete_permanently">Delete Permanently</string>
+    <string name="trash_dialog_empty_title">Empty Trash?</string>
+    <string name="trash_dialog_empty_message">Are you sure you want to permanently delete all notes in the trash? This action cannot be undone.</string>
+
+    <!-- Revisions Screen -->
+    <string name="revisions_screen_title">Version History</string>
+    <string name="revisions_empty_title">No previous revisions</string>
+    <string name="revisions_empty_desc">Snapshots are automatically recorded as you edit your documents</string>
+    <string name="revisions_restore_button">Restore</string>
+    <string name="revisions_untitled">Untitled Note</string>
+
+    <!-- Templates Screen -->
+    <string name="templates_screen_title">Document Templates</string>
+    <string name="templates_use_template">Use Template</string>
+    <string name="templates_empty_title">No templates available</string>
+    <string name="templates_empty_desc">Pre-designed document structures will appear here</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_screen_title">Settings</string>
+    <string name="settings_section_appearance">Appearance</string>
+    <string name="settings_theme_mode">Theme Mode</string>
+    <string name="settings_theme_system">System</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_section_backup">Backup &amp; Restore</string>
+    <string name="settings_backup_desc">Export your notes to a secure JSON file or restore from a previous backup.</string>
+    <string name="settings_backup_export">Export</string>
+    <string name="settings_backup_import">Import</string>
+    <string name="settings_section_security">Security</string>
+    <string name="settings_biometrics_title">Biometric App Lock</string>
+    <string name="settings_biometrics_desc">Require fingerprint or face unlock when opening Notora</string>
+    <string name="settings_section_about">About Notora</string>
+    <string name="settings_version">Version 1.0.0 · Production Ready</string>
+    <string name="settings_about_desc">Executive-tier, privacy-first personal knowledge base and digital note-taking studio.</string>
+
+    <!-- Checklist & Rich Text Components -->
+    <string name="checklist_add_item">Add checklist item…</string>
+    <string name="checklist_completed_count">%1$d of %2$d completed</string>
+    <string name="checklist_progress_title">Tasks Progress</string>
+    <string name="checklist_complete_celebration">Complete! 🎉</string>
+    <string name="checklist_clear_done">Clear Done</string>
+    <string name="checklist_add_item_content_desc">Add Item</string>
+    <string name="checklist_item_done_content_desc">Done</string>
+    <string name="checklist_move_up">Move Up</string>
+    <string name="checklist_move_down">Move Down</string>
+    <string name="checklist_delete_item">Delete Item</string>
+    <string name="color_picker_title">Select Card Color</string>
+    <string name="color_picker_palette_title">Theme Palette</string>
+    <string name="color_picker_selected_desc">Selected</string>
+    <string name="richtext_insert_link">Insert Link</string>
+    <string name="richtext_link_url_label">URL</string>
+    <string name="richtext_link_url_placeholder">https://example.com</string>
+    <string name="richtext_link_text_label">Display Text (optional)</string>
+    <string name="richtext_link_text_placeholder">e.g. My Website</string>
+    <string name="richtext_text_color_title">Text Color:</string>
+    <string name="richtext_default_color_desc">Default Color</string>
+    <string name="richtext_highlight_title">Highlight:</string>
+    <string name="richtext_remove_highlight_desc">Remove Highlight</string>
+    <string name="richtext_insert_web_link">Insert Web Link</string>
+    <string name="richtext_link_url_hint">URL (e.g. https://example.com)</string>
+    <string name="richtext_undo_desc">Undo</string>
+    <string name="richtext_redo_desc">Redo</string>
+    <string name="richtext_bold_desc">Bold</string>
+    <string name="richtext_italic_desc">Italic</string>
+    <string name="richtext_underline_desc">Underline</string>
+    <string name="richtext_strikethrough_desc">Strikethrough</string>
+    <string name="richtext_code_desc">Inline Code</string>
+    <string name="richtext_bullet_list_desc">Bullet List</string>
+    <string name="richtext_numbered_list_desc">Numbered List</string>
+    <string name="richtext_quote_desc">Quote</string>
+    <string name="richtext_text_color_desc">Text Color</string>
+    <string name="richtext_highlight_desc">Highlight</string>
+    <string name="richtext_clear_format_desc">Clear Format</string>
+    <string name="richtext_scroll_left_desc">Scroll Left</string>
+    <string name="richtext_scroll_right_desc">Scroll Right</string>
+    <string name="richtext_insert_action">Insert</string>
+</resources>

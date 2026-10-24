@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="144dp"
+    android:height="144dp"
+    android:viewportWidth="144"
+    android:viewportHeight="144">
+
+    <!-- Atmospheric Halo Glow -->
+    <path
+        android:pathData="M72,72m-52,0a52,52 0,1 1,104 0a52,52 0,1 1,-104 0">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:centerX="72"
+                android:centerY="72"
+                android:gradientRadius="55"
+                android:startColor="#406366F1"
+                android:endColor="#00000000"
+                android:type="radial" />
+        </aapt:attr>
+    </path>
+
+    <!-- Rounded Note Slate -->
+    <path
+        android:pathData="M38,34 L102,34 C107.5,34 112,38.5 112,44 L112,106 C112,111.5 107.5,116 102,116 L42,116 C37.6,116 34,112.4 34,108 L34,38 C34,35.8 35.8,34 38,34 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="34"
+                android:startY="34"
+                android:endX="112"
+                android:endY="116"
+                android:startColor="#1E1B4B"
+                android:centerColor="#111827"
+                android:endColor="#0B0F19"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Slate Border -->
+    <path
+        android:pathData="M38,34 L102,34 C107.5,34 112,38.5 112,44 L112,106 C112,111.5 107.5,116 102,116 L42,116 C37.6,116 34,112.4 34,108 L34,38 C34,35.8 35.8,34 38,34 Z"
+        android:strokeWidth="2"
+        android:strokeColor="#6366F1"
+        android:strokeAlpha="0.7" />
+
+    <!-- Notora Monogram 'N' Left Column -->
+    <path
+        android:pathData="M48,46 L58,46 L58,102 L48,102 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="48"
+                android:startY="46"
+                android:endX="58"
+                android:endY="102"
+                android:startColor="#818CF8"
+                android:endColor="#4F46E5"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Notora Monogram 'N' Diagonal Ribbon -->
+    <path
+        android:pathData="M48,46 L60,46 L96,102 L84,102 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="48"
+                android:startY="46"
+                android:endX="96"
+                android:endY="102"
+                android:startColor="#06B6D4"
+                android:centerColor="#6366F1"
+                android:endColor="#8B5CF6"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Notora Monogram 'N' Right Column -->
+    <path
+        android:pathData="M86,46 L96,46 L96,102 L86,102 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="86"
+                android:startY="46"
+                android:endX="96"
+                android:endY="102"
+                android:startColor="#C084FC"
+                android:endColor="#6366F1"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Golden Bookmark ribbon -->
+    <path
+        android:pathData="M66,28 L78,28 L78,44 L72,40 L66,44 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="66"
+                android:startY="28"
+                android:endX="78"
+                android:endY="44"
+                android:startColor="#FBBF24"
+                android:endColor="#F59E0B"
+                android:type="linear" />
+        </aapt:attr>
+    </path>
+
+    <!-- Crystal Page Accents -->
+    <path
+        android:pathData="M106,50 L106,98 M108,56 L108,92"
+        android:strokeWidth="1.6"
+        android:strokeColor="#22D3EE"
+        android:strokeAlpha="0.8"
+        android:strokeLineCap="round" />
+</vector>

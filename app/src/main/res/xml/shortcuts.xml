@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="new_note"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:shortcutShortLabel="@string/shortcut_new_note"
+        android:shortcutLongLabel="@string/shortcut_new_note">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.example.notora"
+            android:targetClass="com.example.notora.MainActivity">
+            <extra android:name="action" android:value="new_note" />
+        </intent>
+    </shortcut>
+    <shortcut
+        android:shortcutId="new_checklist"
+        android:enabled="true"
+        android:icon="@drawable/ic_launcher_foreground"
+        android:shortcutShortLabel="@string/shortcut_new_checklist"
+        android:shortcutLongLabel="@string/shortcut_new_checklist">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.example.notora"
+            android:targetClass="com.example.notora.MainActivity">
+            <extra android:name="action" android:value="new_checklist" />
+        </intent>
+    </shortcut>
+</shortcuts>

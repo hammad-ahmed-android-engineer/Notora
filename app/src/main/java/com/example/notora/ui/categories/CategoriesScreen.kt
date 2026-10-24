@@ -1,0 +1,188 @@
+package com.example.notora.ui.categories
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Folder
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import com.example.notora.R
+import com.example.notora.common.util.AppUtils
+import com.example.notora.ui.categories.components.CategoryCardItem
+import com.example.notora.ui.components.common.AppEmptyState
+import com.example.notora.ui.components.common.AppInputDialog
+import com.example.notora.ui.components.common.AppTopBar
+import com.example.notora.ui.navigation.Screen
+import com.example.notora.ui.navigation.components.AppBottomNavBar
+import com.example.notora.ui.navigation.components.AppNavigationRail
+import com.example.notora.ui.theme.NotoraPrimary
+import com.example.notora.common.util.rememberDebouncedClick
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun CategoriesScreen(
+    viewModel: CategoryViewModel,
+    onNavigateBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    onNavigateToHome: () -> Unit = onNavigateBack,
+    onNavigateToCalendar: () -> Unit = {},
+    onNavigateToArchive: () -> Unit = {},
+    onNavigateToSettings: () -> Unit = {}
+) {
+    val categories by viewModel.categories.collectAsState()
+    var showDialog by rememberSaveable { mutableStateOf(false) }
+    var editingCategoryId by rememberSaveable { mutableStateOf<Long?>(null) }
+    var categoryName by rememberSaveable { mutableStateOf("") }
+    val editingCategory = categories.find { it.id == editingCategoryId }
+
+    val configuration = LocalConfiguration.current
+    val isLandscape = AppUtils.isLandscape(configuration)
+    val columns = AppUtils.getGridColumnCount(configuration, portraitColumns = 1, landscapeColumns = 2)
+
+    val contentScaffold = @Composable { scaffoldModifier: Modifier ->
+        Scaffold(
+            modifier = scaffoldModifier,
+            topBar = {
+                AppTopBar(
+                    title = stringResource(R.string.categories_screen_title),
+                    onNavigateBack = onNavigateBack
+                )
+            },
+            bottomBar = {
+                if (!isLandscape) {
+                    AppBottomNavBar(
+                        currentRoute = Screen.CATEGORIES,
+                        onNavigateToHome = onNavigateToHome,
+                        onNavigateToCategories = { /* Already here */ },
+                        onNavigateToCalendar = onNavigateToCalendar,
+                        onNavigateToArchive = onNavigateToArchive,
+                        onNavigateToSettings = onNavigateToSettings,
+                        onCreateNote = {
+                            editingCategoryId = null
+                            categoryName = ""
+                            showDialog = true
+                        }
+                    )
+                }
+            },
+            floatingActionButton = {
+                if (isLandscape) {
+                    FloatingActionButton(
+                        onClick = rememberDebouncedClick {
+                            editingCategoryId = null
+                            categoryName = ""
+                            showDialog = true
+                        },
+                        containerColor = NotoraPrimary,
+                        contentColor = Color.White,
+                        shape = CircleShape
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Add,
+                            contentDescription = stringResource(R.string.categories_add_button),
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                }
+            }
+        ) { paddingValues ->
+            if (categories.isEmpty()) {
+                AppEmptyState(
+                    icon = Icons.Default.Folder,
+                    title = stringResource(R.string.categories_empty_title),
+                    description = stringResource(R.string.categories_empty_desc),
+                    actionButtonText = stringResource(R.string.categories_add_button),
+                    onActionClick = rememberDebouncedClick {
+                        editingCategoryId = null
+                        categoryName = ""
+                        showDialog = true
+                    },
+                    modifier = Modifier.padding(paddingValues)
+                )
+            } else {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(columns),
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues),
+                    contentPadding = PaddingValues(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    items(categories, key = { it.id }) { category ->
+                        CategoryCardItem(
+                            category = category,
+                            onEditClick = {
+                                editingCategoryId = category.id
+                                categoryName = category.name
+                                showDialog = true
+                            },
+                            onDeleteClick = {
+                                viewModel.deleteCategory(category.id)
+                            }
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    if (isLandscape) {
+        Row(modifier = modifier.fillMaxSize()) {
+            AppNavigationRail(
+                currentRoute = Screen.CATEGORIES,
+                onNavigateToHome = onNavigateToHome,
+                onNavigateToCategories = { /* Already here */ },
+                onNavigateToCalendar = onNavigateToCalendar,
+                onNavigateToArchive = onNavigateToArchive,
+                onNavigateToSettings = onNavigateToSettings
+            )
+            contentScaffold(Modifier.weight(1f))
+        }
+    } else {
+        contentScaffold(modifier.fillMaxSize())
+    }
+
+    if (showDialog) {
+        AppInputDialog(
+            title = if (editingCategory != null) stringResource(R.string.categories_dialog_edit_title) else stringResource(R.string.categories_dialog_new_title),
+            value = categoryName,
+            onValueChange = { categoryName = it },
+            placeholder = stringResource(R.string.categories_name_placeholder),
+            confirmButtonText = if (editingCategory != null) stringResource(R.string.action_save) else stringResource(R.string.categories_add_button),
+            onConfirm = {
+                if (categoryName.isNotBlank()) {
+                    if (editingCategory != null) {
+                        viewModel.saveCategory(editingCategory.id, categoryName.trim(), editingCategory.colorHex)
+                    } else {
+                        viewModel.saveCategory(0L, categoryName.trim(), "#6366F1")
+                    }
+                }
+                showDialog = false
+            },
+            onDismiss = { showDialog = false }
+        )
+    }
+}

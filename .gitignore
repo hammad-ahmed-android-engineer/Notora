@@ -1,0 +1,63 @@
+# Built application files
+*.apk
+*.ap_',
+*.aab
+*.unitypackage
+*.app
+
+# Generated files
+bin/
+gen/
+out/
+build/
+app/build/
+
+# Gradle files
+.gradle/
+gradle-app.setting
+gradle.properties
+!gradle-wrapper.properties
+
+# Local configuration file (sdk path, etc.)
+local.properties
+
+# IDE specific files
+.idea/
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/dictionaries
+.idea/codeStyles
+.idea/dataSources/
+.idea/dataSources.local.xml
+.idea/sqlDialects.xml
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.iml
+*.iml
+.DS_Store
+.thumbs.db
+
+# C++ / Native build files
+.externalNativeBuild/
+.cxx/
+
+# Profiler & Debugging
+captures/
+.profiler/
+
+# Testing & Lint reports
+test-results/
+androidTest-results/
+lint/
+reports/
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.Spotlight-V100
+.Trashes

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base Padding Dimensions mapped to Intuit SDP -->
+    <dimen name="app_padding_extra_small">@dimen/_4sdp</dimen>
+    <dimen name="app_padding_small">@dimen/_8sdp</dimen>
+    <dimen name="app_padding_medium">@dimen/_16sdp</dimen>
+    <dimen name="app_padding_large">@dimen/_24sdp</dimen>
+    <dimen name="app_padding_extra_large">@dimen/_32sdp</dimen>
+
+    <!-- Corner Radii -->
+    <dimen name="app_radius_small">@dimen/_8sdp</dimen>
+    <dimen name="app_radius_medium">@dimen/_12sdp</dimen>
+    <dimen name="app_radius_large">@dimen/_16sdp</dimen>
+    <dimen name="app_radius_extra_large">@dimen/_24sdp</dimen>
+
+    <!-- Component Heights -->
+    <dimen name="app_button_height">@dimen/_48sdp</dimen>
+    <dimen name="app_search_bar_height">@dimen/_48sdp</dimen>
+    <dimen name="app_top_bar_height">@dimen/_56sdp</dimen>
+    <dimen name="app_toolbar_height">@dimen/_44sdp</dimen>
+    <dimen name="app_card_min_height">@dimen/_80sdp</dimen>
+
+    <!-- Icon Sizes -->
+    <dimen name="app_icon_small">@dimen/_16sdp</dimen>
+    <dimen name="app_icon_medium">@dimen/_24sdp</dimen>
+    <dimen name="app_icon_large">@dimen/_32sdp</dimen>
+    <dimen name="app_icon_extra_large">@dimen/_48sdp</dimen>
+
+    <!-- Text Sizes mapped to Intuit SSP -->
+    <dimen name="app_text_display_large">@dimen/_28ssp</dimen>
+    <dimen name="app_text_display_medium">@dimen/_24ssp</dimen>
+    <dimen name="app_text_display_small">@dimen/_20ssp</dimen>
+    <dimen name="app_text_headline_large">@dimen/_19ssp</dimen>
+    <dimen name="app_text_headline_medium">@dimen/_17ssp</dimen>
+    <dimen name="app_text_headline_small">@dimen/_15ssp</dimen>
+    <dimen name="app_text_title_large">@dimen/_16ssp</dimen>
+    <dimen name="app_text_title_medium">@dimen/_14ssp</dimen>
+    <dimen name="app_text_title_small">@dimen/_13ssp</dimen>
+    <dimen name="app_text_body_large">@dimen/_14ssp</dimen>
+    <dimen name="app_text_body_medium">@dimen/_13ssp</dimen>
+    <dimen name="app_text_body_small">@dimen/_11ssp</dimen>
+    <dimen name="app_text_label_large">@dimen/_12ssp</dimen>
+    <dimen name="app_text_label_medium">@dimen/_11ssp</dimen>
+    <dimen name="app_text_label_small">@dimen/_10ssp</dimen>
+    <dimen name="app_text_caption">@dimen/_9ssp</dimen>
+</resources>
