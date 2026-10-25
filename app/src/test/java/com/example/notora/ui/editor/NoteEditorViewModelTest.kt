@@ -100,12 +100,15 @@ class NoteEditorViewModelTest {
         testDispatcher.scheduler.advanceUntilIdle()
 
         viewModel.onTitleChange("New Rotating Title")
+        testDispatcher.scheduler.advanceUntilIdle()
         assertEquals("New Rotating Title", savedStateHandle.get<String>("draft_title"))
 
         viewModel.setChecklistItems(listOf(ChecklistItem(id = 1L, noteId = 0L, text = "Buy Groceries", isCompleted = false)))
+        testDispatcher.scheduler.advanceUntilIdle()
         assertNotNull(savedStateHandle.get<String>("draft_checklist_json"))
 
         viewModel.setColorHex("#10B981")
+        testDispatcher.scheduler.advanceUntilIdle()
         assertEquals("#10B981", savedStateHandle.get<String>("draft_color_hex"))
     }
 

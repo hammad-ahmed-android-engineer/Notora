@@ -29,15 +29,14 @@ import com.example.notora.domain.usecase.tag.GetTagsUseCase
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 data class NoteEditorUiState(
     val noteId: Long = 0,
@@ -120,7 +119,7 @@ class NoteEditorViewModel @Inject constructor(
         if (isDataLoaded) return
         isDataLoaded = true
 
-        viewModelScope.launch(Dispatchers.Default) {
+        viewModelScope.launch {
             // 1. Check if there is already an in-memory/persisted draft in SavedStateHandle
             val draftTitle: String? = savedStateHandle.get<String>("draft_title")
             val draftContentJson: String? = savedStateHandle.get<String>("draft_content_json")
@@ -128,14 +127,10 @@ class NoteEditorViewModel @Inject constructor(
             if (draftTitle != null || draftContentJson != null) {
                 draftContentJson?.let {
                     val doc = RichTextSerializer.fromJson(it)
-                    withContext(Dispatchers.Main) {
-                        editorState.setDocument(doc)
-                    }
+                    editorState.setDocument(doc)
                 }
                 val title = draftTitle ?: ""
-                withContext(Dispatchers.Main) {
-                    titleTextFieldValue = TextFieldValue(title, TextRange(title.length))
-                }
+                titleTextFieldValue = TextFieldValue(title, TextRange(title.length))
 
                 val draftChecklistJson: String? = savedStateHandle.get<String>("draft_checklist_json")
                 val checklistItems: List<ChecklistItem> = if (!draftChecklistJson.isNullOrBlank()) {
@@ -195,10 +190,8 @@ class NoteEditorViewModel @Inject constructor(
                 val existingNote = getNoteByIdUseCase.getSync(navNoteId)
                 if (existingNote != null) {
                     val doc = RichTextSerializer.fromJson(existingNote.contentJson)
-                    withContext(Dispatchers.Main) {
-                        editorState.setDocument(doc)
-                        titleTextFieldValue = TextFieldValue(existingNote.title, TextRange(existingNote.title.length))
-                    }
+                    editorState.setDocument(doc)
+                    titleTextFieldValue = TextFieldValue(existingNote.title, TextRange(existingNote.title.length))
 
                     _uiState.value = _uiState.value.copy(
                         noteId = existingNote.id,
@@ -381,8 +374,8 @@ class NoteEditorViewModel @Inject constructor(
 
     private fun scheduleAutoSave() {
         autoSaveJob?.cancel()
-        autoSaveJob = viewModelScope.launch(Dispatchers.Default) {
-            delay(800)
+        autoSaveJob = viewModelScope.launch {
+            delay(500.milliseconds)
             updateStats()
             persistDraftToSavedState()
 
@@ -399,7 +392,7 @@ class NoteEditorViewModel @Inject constructor(
         }
     }
 
-    suspend fun saveNote(): Long = withContext(Dispatchers.IO) {
+    suspend fun saveNote(): Long {
         // Prevent creating or keeping blank empty notes in the database
         if (isNoteEmpty()) {
             val currentId = _uiState.value.noteId
@@ -408,7 +401,7 @@ class NoteEditorViewModel @Inject constructor(
                 _uiState.value = _uiState.value.copy(noteId = 0L)
                 savedStateHandle["draft_note_id"] = 0L
             }
-            return@withContext 0L
+            return 0L
         }
 
         _uiState.value = _uiState.value.copy(isSaving = true)
@@ -449,7 +442,7 @@ class NoteEditorViewModel @Inject constructor(
             reminderScheduler.scheduleReminder(note.copy(id = savedId))
         }
 
-        return@withContext savedId
+        return savedId
     }
 
     fun deleteNote() {

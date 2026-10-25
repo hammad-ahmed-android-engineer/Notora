@@ -56,7 +56,7 @@ class CalendarViewModel @Inject constructor(
             formattedDate = AppUtils.formatFullDate(date)
         )
     }
-    .flowOn(Dispatchers.Default)
+    
     .stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),

@@ -96,7 +96,7 @@ class HomeViewModel @Inject constructor(
             isLoading = false
         )
     }
-    .flowOn(Dispatchers.Default)
+    
     .stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5000),

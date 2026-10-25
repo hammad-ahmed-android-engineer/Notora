@@ -28,7 +28,7 @@ class TrashViewModel @Inject constructor(
 ) : ViewModel() {
 
     val trashedNotes: StateFlow<List<Note>> = getTrashedNotesUseCase()
-        .flowOn(Dispatchers.Default)
+        
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),

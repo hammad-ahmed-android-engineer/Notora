@@ -9,7 +9,7 @@
 - 📝 **Rich Text Editor**: Full formatting suite supporting Bold, Italic, Underline, Strikethrough, Headings (H1, H2, H3), Custom Text & Highlight Colors, Web Links, Bullet Lists, and Interactive Checklists.
 - 🎨 **Theme-Aware Note Backgrounds**: Automatic light and dark paper surface switching with intelligent backward-compatibility RGB distance mapping for legacy notes.
 - 🛡️ **Debounced Touch Guard**: Built-in 500ms click guard architecture (`clickableDebounced` & `rememberDebouncedClick`) across all touch targets, FABs, and buttons to eliminate rapid multi-click/double-tap glitches.
-- ⚡ **Zero-Latency Performance**: Optimized for low-end hardware with background thread offloading (`Dispatchers.IO` for Room DB mapping, `Dispatchers.Default` for state flow combining) and debounced background GSON draft persistence.
+- ⚡ **Zero-Latency Performance**: Optimized for low-end hardware with background thread offloading (`Dispatchers.IO` for Room DB mapping) and debounced background GSON draft persistence.
 - 📐 **Adaptive & Responsive Layouts**: Fluid responsive UI supporting both Portrait vertical flows and Dual-Column Landscape layouts with a cradled bottom navigation bar and floating center FAB.
 - 🏷️ **Categorization & Tagging**: Organize notes effortlessly using custom colored categories and tags.
 - 📌 **Pin & Favorite**: Keep critical notes pinned to the top or marked as favorites for immediate access.

@@ -26,7 +26,7 @@ class ArchiveViewModel @Inject constructor(
 ) : ViewModel() {
 
     val archivedNotes: StateFlow<List<Note>> = getArchivedNotesUseCase()
-        .flowOn(Dispatchers.Default)
+        
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
