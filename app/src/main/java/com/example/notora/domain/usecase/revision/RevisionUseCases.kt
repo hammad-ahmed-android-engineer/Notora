@@ -1,6 +1,6 @@
 package com.example.notora.domain.usecase.revision
 
-import com.example.notora.common.util.AppUtils
+import com.example.notora.core.utils.AppUtils
 import com.example.notora.domain.editor.RichTextSerializer
 import com.example.notora.domain.model.NoteRevision
 import com.example.notora.domain.repository.NoteRepository

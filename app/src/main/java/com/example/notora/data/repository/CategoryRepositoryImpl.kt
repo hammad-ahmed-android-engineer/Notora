@@ -1,10 +1,13 @@
 package com.example.notora.data.repository
 
 import com.example.notora.data.local.dao.CategoryDao
-import com.example.notora.data.local.entity.CategoryEntity
+import com.example.notora.data.local.entity.toDomainModel
+import com.example.notora.data.local.entity.toEntity
 import com.example.notora.domain.model.Category
 import com.example.notora.domain.repository.CategoryRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -15,42 +18,17 @@ class CategoryRepositoryImpl @Inject constructor(
 ) : CategoryRepository {
 
     override fun getAllCategories(): Flow<List<Category>> {
-        return categoryDao.getAllCategories().map { list ->
-            list.map {
-                Category(
-                    id = it.id,
-                    name = it.name,
-                    colorHex = it.colorHex,
-                    iconName = it.iconName,
-                    displayOrder = it.displayOrder,
-                    isArchived = it.isArchived
-                )
-            }
-        }
+        return categoryDao.getAllCategories()
+            .map { list -> list.map { it.toDomainModel() } }
+            .flowOn(Dispatchers.IO)
     }
 
     override suspend fun getCategoryById(id: Long): Category? {
-        return categoryDao.getCategoryById(id)?.let {
-            Category(
-                id = it.id,
-                name = it.name,
-                colorHex = it.colorHex,
-                iconName = it.iconName,
-                displayOrder = it.displayOrder,
-                isArchived = it.isArchived
-            )
-        }
+        return categoryDao.getCategoryById(id)?.toDomainModel()
     }
 
     override suspend fun saveCategory(category: Category): Long {
-        val entity = CategoryEntity(
-            id = category.id,
-            name = category.name,
-            colorHex = category.colorHex,
-            iconName = category.iconName,
-            displayOrder = category.displayOrder,
-            isArchived = category.isArchived
-        )
+        val entity = category.toEntity()
         return if (category.id == 0L) {
             categoryDao.insertCategory(entity)
         } else {

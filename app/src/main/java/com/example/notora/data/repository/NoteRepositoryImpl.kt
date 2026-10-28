@@ -4,10 +4,9 @@ import com.example.notora.data.local.dao.AttachmentDao
 import com.example.notora.data.local.dao.ChecklistDao
 import com.example.notora.data.local.dao.NoteDao
 import com.example.notora.data.local.dao.RevisionDao
-import com.example.notora.data.local.entity.AttachmentEntity
-import com.example.notora.data.local.entity.ChecklistItemEntity
-import com.example.notora.data.local.entity.NoteEntity
 import com.example.notora.data.local.entity.NoteRevisionEntity
+import com.example.notora.data.local.entity.toDomainModel
+import com.example.notora.data.local.entity.toEntity
 import com.example.notora.domain.model.Note
 import com.example.notora.domain.model.NoteFilter
 import com.example.notora.domain.model.NoteRevision
@@ -74,47 +73,38 @@ class NoteRepositoryImpl @Inject constructor(
     }
 
     override fun searchNotes(filter: NoteFilter): Flow<List<Note>> {
-        return noteDao.searchNotes(
-            query = filter.query,
-            categoryId = filter.categoryId,
-            noteType = filter.noteType?.name,
-            colorHex = filter.colorHex,
-            isPinnedOnly = if (filter.isPinnedOnly) 1 else 0,
-            isFavoriteOnly = if (filter.isFavoriteOnly) 1 else 0,
-            includeArchived = if (filter.isArchivedOnly) 1 else 0,
-            includeTrashed = if (filter.isTrashedOnly) 1 else 0
-        )
-        .map { list -> list.map { it.toDomainModel() } }
-        .flowOn(Dispatchers.IO)
+        val flow = if (filter.query.isBlank()) {
+            noteDao.searchNotesWithoutQuery(
+                categoryId = filter.categoryId,
+                tagId = filter.tagId,
+                noteType = filter.noteType?.name,
+                colorHex = filter.colorHex,
+                isPinnedOnly = if (filter.isPinnedOnly) 1 else 0,
+                isFavoriteOnly = if (filter.isFavoriteOnly) 1 else 0,
+                includeArchived = if (filter.isArchivedOnly) 1 else 0,
+                includeTrashed = if (filter.isTrashedOnly) 1 else 0
+            )
+        } else {
+            noteDao.searchNotesWithQuery(
+                query = filter.query,
+                categoryId = filter.categoryId,
+                tagId = filter.tagId,
+                noteType = filter.noteType?.name,
+                colorHex = filter.colorHex,
+                isPinnedOnly = if (filter.isPinnedOnly) 1 else 0,
+                isFavoriteOnly = if (filter.isFavoriteOnly) 1 else 0,
+                includeArchived = if (filter.isArchivedOnly) 1 else 0,
+                includeTrashed = if (filter.isTrashedOnly) 1 else 0
+            )
+        }
+
+        return flow
+            .map { list -> list.map { it.toDomainModel() } }
+            .flowOn(Dispatchers.IO)
     }
 
     override suspend fun saveNote(note: Note): Long {
-        val noteEntity = NoteEntity(
-            id = note.id,
-            title = note.title,
-            contentJson = note.contentJson,
-            plainTextContent = note.plainTextContent,
-            noteType = note.noteType.name,
-            createdAt = note.createdAt,
-            updatedAt = System.currentTimeMillis(),
-            categoryId = note.category?.id,
-            colorHex = note.colorHex,
-            isPinned = note.isPinned,
-            isArchived = note.isArchived,
-            isTrashed = note.isTrashed,
-            trashedAt = note.trashedAt,
-            isFavorite = note.isFavorite,
-            coverImageUri = note.coverImageUri,
-            sourceUrl = note.sourceUrl,
-            locationLabel = note.locationLabel,
-            mood = note.mood,
-            reminderTime = note.reminderTime,
-            reminderRepeat = note.reminderRepeat,
-            isReminderActive = note.isReminderActive,
-            wordCount = note.wordCount,
-            charCount = note.charCount,
-            readingTimeMinutes = note.readingTimeMinutes
-        )
+        val noteEntity = note.toEntity()
 
         val noteId = if (note.id == 0L) {
             noteDao.insertNote(noteEntity)
@@ -123,37 +113,16 @@ class NoteRepositoryImpl @Inject constructor(
             note.id
         }
 
-        // Save tags
         val tagIds = note.tags.map { it.id }
         noteDao.setNoteTags(noteId, tagIds)
 
-        // Save checklist items
         checklistDao.deleteChecklistItemsForNote(noteId)
-        val checklistEntities = note.checklistItems.map {
-            ChecklistItemEntity(
-                id = if (it.id == 0L) 0 else it.id,
-                noteId = noteId,
-                text = it.text,
-                isCompleted = it.isCompleted,
-                displayOrder = it.displayOrder
-            )
-        }
+        val checklistEntities = note.checklistItems.map { it.toEntity(noteId) }
         checklistDao.insertChecklistItems(checklistEntities)
 
-        // Save attachments
         attachmentDao.deleteAttachmentsForNote(noteId)
         note.attachments.forEach {
-            attachmentDao.insertAttachment(
-                AttachmentEntity(
-                    id = if (it.id == 0L) 0 else it.id,
-                    noteId = noteId,
-                    uri = it.uri,
-                    mimeType = it.mimeType,
-                    displayName = it.displayName,
-                    fileSizeBytes = it.fileSizeBytes,
-                    createdAt = it.createdAt
-                )
-            )
+            attachmentDao.insertAttachment(it.toEntity(noteId))
         }
 
         return noteId
@@ -232,17 +201,7 @@ class NoteRepositoryImpl @Inject constructor(
 
     override fun getRevisions(noteId: Long): Flow<List<NoteRevision>> {
         return revisionDao.getRevisionsForNote(noteId)
-            .map { list ->
-                list.map {
-                    NoteRevision(
-                        id = it.id,
-                        noteId = it.noteId,
-                        title = it.title,
-                        contentJson = it.contentJson,
-                        createdAt = it.createdAt
-                    )
-                }
-            }
+            .map { list -> list.map { it.toDomainModel() } }
             .flowOn(Dispatchers.IO)
     }
 }

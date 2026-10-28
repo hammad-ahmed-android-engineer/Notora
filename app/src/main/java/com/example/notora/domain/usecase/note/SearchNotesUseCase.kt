@@ -1,6 +1,6 @@
 package com.example.notora.domain.usecase.note
 
-import com.example.notora.common.util.AppUtils
+import com.example.notora.core.utils.AppUtils
 import com.example.notora.domain.model.Note
 import com.example.notora.domain.model.NoteFilter
 import com.example.notora.domain.repository.NoteRepository

@@ -1,5 +1,8 @@
 package com.example.notora.domain.editor
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class RichSpanType {
     BOLD,
     ITALIC,

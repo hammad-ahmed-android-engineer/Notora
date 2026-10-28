@@ -1,6 +1,6 @@
 package com.example.notora.domain.usecase.tag
 
-import com.example.notora.common.util.AppUtils
+import com.example.notora.core.utils.AppUtils
 import com.example.notora.domain.model.Tag
 import com.example.notora.domain.repository.TagRepository
 import kotlinx.coroutines.flow.Flow

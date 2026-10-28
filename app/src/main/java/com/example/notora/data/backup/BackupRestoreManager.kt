@@ -5,18 +5,19 @@ import android.net.Uri
 import com.example.notora.data.local.dao.CategoryDao
 import com.example.notora.data.local.dao.NoteDao
 import com.example.notora.data.local.dao.TagDao
-import com.example.notora.data.local.entity.CategoryEntity
 import com.example.notora.data.local.entity.NoteEntity
 import com.example.notora.data.local.entity.TagEntity
+import com.example.notora.data.local.entity.toDomainModel
+import com.example.notora.data.local.entity.toEntity
 import com.example.notora.domain.model.Category
 import com.example.notora.domain.model.Note
 import com.example.notora.domain.model.Tag
-import com.google.gson.Gson
-import com.google.gson.JsonParser
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.Json
 import java.io.BufferedReader
 import java.io.InputStream
 import java.io.InputStreamReader
@@ -28,6 +29,7 @@ import javax.inject.Singleton
 /**
  * Data container for complete application backup state.
  */
+@Serializable
 data class NoteNestBackupData(
     val version: Int = 1,
     val timestamp: Long = System.currentTimeMillis(),
@@ -58,28 +60,23 @@ class BackupRestoreManager @Inject constructor(
     private val tagDao: TagDao,
     private val noteFileExporter: NoteFileExporter
 ) {
-    private val gson = Gson()
+    private val jsonFormatter = Json {
+        ignoreUnknownKeys = true
+        encodeDefaults = true
+        isLenient = true
+    }
 
     /**
      * Exports all active and archived notes, categories, and tags to a JSON file via [uri].
      */
     suspend fun exportBackupToJson(uri: Uri): Boolean = withContext(Dispatchers.IO) {
-        try {
+        runCatching {
             val activeNotes = noteDao.getActiveNotes().first().map { it.toDomainModel() }
             val archivedNotes = noteDao.getArchivedNotes().first().map { it.toDomainModel() }
             val allNotes = activeNotes + archivedNotes
 
-            val categories = categoryDao.getAllCategories().first().map {
-                Category(
-                    id = it.id,
-                    name = it.name,
-                    colorHex = it.colorHex,
-                    iconName = it.iconName,
-                    displayOrder = it.displayOrder,
-                    isArchived = it.isArchived
-                )
-            }
-            val tags = tagDao.getAllTags().first().map { Tag(id = it.id, name = it.name) }
+            val categories = categoryDao.getAllCategories().first().map { it.toDomainModel() }
+            val tags = tagDao.getAllTags().first().map { it.toDomainModel() }
 
             val backupData = NoteNestBackupData(
                 version = 1,
@@ -89,17 +86,17 @@ class BackupRestoreManager @Inject constructor(
                 tags = tags
             )
 
-            val jsonString = gson.toJson(backupData)
-            val outputStream: OutputStream? = context.contentResolver.openOutputStream(uri)
-            outputStream?.use { output ->
+            val jsonString = jsonFormatter.encodeToString(backupData)
+            val outputStream: OutputStream = context.contentResolver.openOutputStream(uri)
+                ?: return@runCatching false
+
+            outputStream.use { output ->
                 OutputStreamWriter(output).use { writer ->
                     writer.write(jsonString)
                 }
             }
             true
-        } catch (_: Exception) {
-            false
-        }
+        }.getOrDefault(false)
     }
 
     /**
@@ -107,7 +104,6 @@ class BackupRestoreManager @Inject constructor(
      */
     suspend fun importBackupFromJson(uri: Uri): BackupImportResult = withContext(Dispatchers.IO) {
         try {
-            // 1. Verify file content & read stream
             val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
             val jsonString = inputStream?.use { input ->
                 BufferedReader(InputStreamReader(input)).use { reader ->
@@ -119,63 +115,12 @@ class BackupRestoreManager @Inject constructor(
                 return@withContext BackupImportResult(false, errorMessage = "The selected file is empty.")
             }
 
-            // 2. Strict JSON Syntax Validation using JsonParser
-            val jsonElement = try {
-                JsonParser.parseString(jsonString)
-            } catch (_: Exception) {
-                return@withContext BackupImportResult(
-                    false,
-                    errorMessage = "Invalid JSON file: Selected file is not a valid JSON document."
-                )
-            }
-
-            if (!jsonElement.isJsonObject) {
-                return@withContext BackupImportResult(
-                    false,
-                    errorMessage = "Invalid backup format: File must contain a valid Notora backup JSON object."
-                )
-            }
-
-            val jsonObject = jsonElement.asJsonObject
-
-            // 3. Schema Structure Validation
-            val hasNotes = jsonObject.has("notes") && jsonObject.get("notes").isJsonArray
-            val hasCategories = jsonObject.has("categories") && jsonObject.get("categories").isJsonArray
-            val hasTags = jsonObject.has("tags") && jsonObject.get("tags").isJsonArray
-
-            if (!hasNotes && !hasCategories && !hasTags) {
-                return@withContext BackupImportResult(
-                    false,
-                    errorMessage = "Invalid schema: The JSON file does not match Notora's database backup schema."
-                )
-            }
-
-            // 4. Gson Deserialization to BackupData
             val backupData = try {
-                gson.fromJson(jsonString, NoteNestBackupData::class.java)
-            } catch (_: Exception) {
+                jsonFormatter.decodeFromString<NoteNestBackupData>(jsonString)
+            } catch (e: Exception) {
                 return@withContext BackupImportResult(
                     false,
-                    errorMessage = "Schema mismatch: Unable to parse JSON fields into Notora database entities."
-                )
-            }
-
-            if (backupData == null) {
-                return@withContext BackupImportResult(
-                    false,
-                    errorMessage = "Invalid backup data: Unreadable backup structure."
-                )
-            }
-
-            // 5. Entity Field Schema Validation
-            val isNoteSchemaValid = backupData.notes.all { note ->
-                note.title != null && note.contentJson != null && note.noteType != null
-            }
-
-            if (!isNoteSchemaValid) {
-                return@withContext BackupImportResult(
-                    false,
-                    errorMessage = "Schema validation failed: Notes inside JSON contain incompatible entity fields."
+                    errorMessage = "Invalid JSON file or incompatible backup schema: ${e.localizedMessage}"
                 )
             }
 
@@ -183,24 +128,14 @@ class BackupRestoreManager @Inject constructor(
             var importedTags = 0
             var importedNotes = 0
 
-            // Import categories
             backupData.categories.forEach { cat: Category ->
                 val existing = categoryDao.getCategoryByName(cat.name)
                 if (existing == null) {
-                    categoryDao.insertCategory(
-                        CategoryEntity(
-                            name = cat.name,
-                            colorHex = cat.colorHex,
-                            iconName = cat.iconName,
-                            displayOrder = cat.displayOrder,
-                            isArchived = cat.isArchived
-                        )
-                    )
+                    categoryDao.insertCategory(cat.toEntity())
                     importedCategories++
                 }
             }
 
-            // Import tags
             backupData.tags.forEach { tag: Tag ->
                 val existing = tagDao.getTagByName(tag.name)
                 if (existing == null) {
@@ -209,7 +144,6 @@ class BackupRestoreManager @Inject constructor(
                 }
             }
 
-            // Import notes
             backupData.notes.forEach { note: Note ->
                 val newNote = note.copy(id = 0)
                 val catId = note.category?.let { categoryDao.getCategoryByName(it.name)?.id }
@@ -257,39 +191,31 @@ class BackupRestoreManager @Inject constructor(
         }
     }
 
-    /**
-     * Formats and writes an individual note to the given [uri] in the specified [format].
-     */
     suspend fun exportNoteToFile(note: Note, uri: Uri, format: ExportFormat): Boolean = withContext(Dispatchers.IO) {
-        try {
+        runCatching {
             val outputText = noteFileExporter.formatNote(note, format)
-            val outputStream: OutputStream? = context.contentResolver.openOutputStream(uri)
-            outputStream?.use { output ->
+            val outputStream: OutputStream = context.contentResolver.openOutputStream(uri)
+                ?: return@runCatching false
+            outputStream.use { output ->
                 OutputStreamWriter(output).use { writer ->
                     writer.write(outputText)
                 }
             }
             true
-        } catch (_: Exception) {
-            false
-        }
+        }.getOrDefault(false)
     }
 
-    /**
-     * Reads a note from the provided [uri] and parses it into a note domain entity.
-     */
     suspend fun importNoteFromFile(uri: Uri): Note? = withContext(Dispatchers.IO) {
-        try {
-            val inputStream: InputStream? = context.contentResolver.openInputStream(uri)
-            val content = inputStream?.use { input ->
+        runCatching {
+            val inputStream: InputStream = context.contentResolver.openInputStream(uri)
+                ?: return@runCatching null
+            val content = inputStream.use { input ->
                 BufferedReader(InputStreamReader(input)).use { reader ->
                     reader.readText()
                 }
-            } ?: return@withContext null
+            }
 
             noteFileExporter.parseNoteFromText(content)
-        } catch (_: Exception) {
-            null
-        }
+        }.getOrNull()
     }
 }

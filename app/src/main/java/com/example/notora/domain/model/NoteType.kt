@@ -1,5 +1,8 @@
 package com.example.notora.domain.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 enum class NoteType(val displayName: String, val iconName: String) {
     STANDARD("Standard Note", "description"),
     CHECKLIST("Checklist", "check_box"),

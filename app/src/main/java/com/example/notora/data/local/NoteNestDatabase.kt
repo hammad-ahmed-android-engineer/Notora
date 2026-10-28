@@ -13,6 +13,7 @@ import com.example.notora.data.local.entity.AttachmentEntity
 import com.example.notora.data.local.entity.CategoryEntity
 import com.example.notora.data.local.entity.ChecklistItemEntity
 import com.example.notora.data.local.entity.NoteEntity
+import com.example.notora.data.local.entity.NoteFtsEntity
 import com.example.notora.data.local.entity.NoteLinkEntity
 import com.example.notora.data.local.entity.NoteRevisionEntity
 import com.example.notora.data.local.entity.NoteTagCrossRef
@@ -22,6 +23,7 @@ import com.example.notora.data.local.entity.TagEntity
 @Database(
     entities = [
         NoteEntity::class,
+        NoteFtsEntity::class,
         CategoryEntity::class,
         TagEntity::class,
         NoteTagCrossRef::class,
@@ -31,7 +33,7 @@ import com.example.notora.data.local.entity.TagEntity
         NoteLinkEntity::class,
         NoteTemplateEntity::class
     ],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class NoteNestDatabase : RoomDatabase() {

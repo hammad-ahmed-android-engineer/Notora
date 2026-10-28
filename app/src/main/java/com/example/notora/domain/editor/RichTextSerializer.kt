@@ -9,28 +9,33 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
-import com.example.notora.common.util.AppUtils
-import com.google.gson.Gson
+import com.example.notora.core.utils.AppUtils
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 object RichTextSerializer {
 
-    private val gson = Gson()
-
-    fun toJson(document: RichTextDocument): String {
-        return gson.toJson(document)
+    private val jsonFormatter = Json {
+        ignoreUnknownKeys = true
+        encodeDefaults = true
+        isLenient = true
     }
 
-    fun fromJson(json: String?): RichTextDocument {
-        if (json.isNullOrBlank()) return RichTextDocument.empty()
+    fun toJson(document: RichTextDocument): String {
+        return jsonFormatter.encodeToString(document)
+    }
+
+    fun fromJson(jsonString: String?): RichTextDocument {
+        if (jsonString.isNullOrBlank()) return RichTextDocument.empty()
         return try {
-            val trimmed = json.trim()
+            val trimmed = jsonString.trim()
             if (trimmed.startsWith("{")) {
-                gson.fromJson(trimmed, RichTextDocument::class.java) ?: RichTextDocument.empty()
+                jsonFormatter.decodeFromString<RichTextDocument>(trimmed)
             } else {
                 RichTextDocument.fromPlainText(trimmed)
             }
         } catch (_: Exception) {
-            RichTextDocument.fromPlainText(json)
+            RichTextDocument.fromPlainText(jsonString)
         }
     }
 
@@ -52,22 +57,22 @@ object RichTextSerializer {
                     RichSpanType.UNDERLINE -> addStyle(SpanStyle(textDecoration = TextDecoration.Underline), start, end)
                     RichSpanType.STRIKETHROUGH -> addStyle(SpanStyle(textDecoration = TextDecoration.LineThrough), start, end)
                     RichSpanType.HEADING_1 -> addStyle(
-                        SpanStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color(0xFF1E293B)), start, end
+                        SpanStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold), start, end
                     )
                     RichSpanType.HEADING_2 -> addStyle(
-                        SpanStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold, color = Color(0xFF334155)), start, end
+                        SpanStyle(fontSize = 20.sp, fontWeight = FontWeight.Bold), start, end
                     )
                     RichSpanType.HEADING_3 -> addStyle(
-                        SpanStyle(fontSize = 17.sp, fontWeight = FontWeight.SemiBold, color = Color(0xFF475569)), start, end
+                        SpanStyle(fontSize = 17.sp, fontWeight = FontWeight.SemiBold), start, end
                     )
                     RichSpanType.INLINE_CODE -> addStyle(
-                        SpanStyle(fontFamily = FontFamily.Monospace, background = Color(0xFFE2E8F0), color = Color(0xFF0F172A)), start, end
+                        SpanStyle(fontFamily = FontFamily.Monospace, background = Color(0x33808080)), start, end
                     )
                     RichSpanType.CODE_BLOCK -> addStyle(
                         SpanStyle(fontFamily = FontFamily.Monospace, background = Color(0xFF1E293B), color = Color(0xFFF8FAFC)), start, end
                     )
                     RichSpanType.BLOCK_QUOTE -> addStyle(
-                        SpanStyle(fontStyle = FontStyle.Italic, color = Color(0xFF64748B)), start, end
+                        SpanStyle(fontStyle = FontStyle.Italic), start, end
                     )
                     RichSpanType.TEXT_COLOR -> {
                         span.value?.let { hex ->
@@ -192,12 +197,5 @@ object RichTextSerializer {
         return document.text.trim()
     }
 
-    fun calculateWordCount(text: String): Int =
-        AppUtils.calculateWordCount(text)
 
-    fun calculateCharCount(text: String, includeSpaces: Boolean = true): Int =
-        AppUtils.calculateCharCount(text, includeSpaces)
-
-    fun calculateReadingTimeMinutes(wordCount: Int): Int =
-        AppUtils.calculateReadingTimeMinutes(wordCount)
 }

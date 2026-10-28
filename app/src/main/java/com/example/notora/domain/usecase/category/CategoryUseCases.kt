@@ -1,6 +1,6 @@
 package com.example.notora.domain.usecase.category
 
-import com.example.notora.common.util.AppUtils
+import com.example.notora.core.utils.AppUtils
 import com.example.notora.domain.model.Category
 import com.example.notora.domain.repository.CategoryRepository
 import kotlinx.coroutines.flow.Flow

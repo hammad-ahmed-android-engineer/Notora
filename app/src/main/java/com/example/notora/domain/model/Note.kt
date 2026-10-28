@@ -1,7 +1,9 @@
 package com.example.notora.domain.model
 
-import com.example.notora.common.util.AppUtils
+import com.example.notora.core.utils.AppUtils
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Note(
     val id: Long = 0,
     val title: String = "",
@@ -33,9 +35,7 @@ data class Note(
     val readingTimeMinutes: Int = 0
 ) {
     val displayTitle: String
-        get() = if (title.isNotBlank()) {
-            title
-        } else {
+        get() = title.ifBlank {
             AppUtils.extractFirstLine(plainTextContent, maxLength = 40, fallback = "Untitled Note")
         }
 

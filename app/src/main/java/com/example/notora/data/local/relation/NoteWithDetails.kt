@@ -9,12 +9,9 @@ import com.example.notora.data.local.entity.ChecklistItemEntity
 import com.example.notora.data.local.entity.NoteEntity
 import com.example.notora.data.local.entity.NoteTagCrossRef
 import com.example.notora.data.local.entity.TagEntity
-import com.example.notora.domain.model.Attachment
-import com.example.notora.domain.model.Category
-import com.example.notora.domain.model.ChecklistItem
+import com.example.notora.data.local.entity.toDomainModel
 import com.example.notora.domain.model.Note
 import com.example.notora.domain.model.NoteType
-import com.example.notora.domain.model.Tag
 
 data class NoteWithDetails(
     @Embedded val note: NoteEntity,
@@ -53,10 +50,10 @@ data class NoteWithDetails(
             noteType = try { NoteType.valueOf(note.noteType) } catch (_: Exception) { NoteType.STANDARD },
             createdAt = note.createdAt,
             updatedAt = note.updatedAt,
-            category = category?.let { Category(id = it.id, name = it.name, colorHex = it.colorHex, iconName = it.iconName, displayOrder = it.displayOrder, isArchived = it.isArchived) },
-            tags = tags.map { Tag(id = it.id, name = it.name) },
-            checklistItems = checklistItems.sortedBy { it.displayOrder }.map { ChecklistItem(id = it.id, noteId = it.noteId, text = it.text, isCompleted = it.isCompleted, displayOrder = it.displayOrder) },
-            attachments = attachments.map { Attachment(id = it.id, noteId = it.noteId, uri = it.uri, mimeType = it.mimeType, displayName = it.displayName, fileSizeBytes = it.fileSizeBytes, createdAt = it.createdAt) },
+            category = category?.toDomainModel(),
+            tags = tags.map { it.toDomainModel() },
+            checklistItems = checklistItems.sortedBy { it.displayOrder }.map { it.toDomainModel() },
+            attachments = attachments.map { it.toDomainModel() },
             linkedNoteIds = linkedNoteIds,
             colorHex = note.colorHex,
             isPinned = note.isPinned,

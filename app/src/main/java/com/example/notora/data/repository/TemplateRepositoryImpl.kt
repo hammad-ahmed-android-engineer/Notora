@@ -2,44 +2,29 @@ package com.example.notora.data.repository
 
 import com.example.notora.data.local.dao.TemplateDao
 import com.example.notora.data.local.entity.NoteTemplateEntity
+import com.example.notora.data.local.entity.toDomainModel
+import com.example.notora.data.local.entity.toEntity
 import com.example.notora.domain.editor.RichTextDocument
 import com.example.notora.domain.editor.RichTextSerializer
 import com.example.notora.domain.model.NoteTemplate
-import com.example.notora.domain.model.NoteType
 import com.example.notora.domain.repository.TemplateRepository
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
-/**
- * Concrete implementation of [TemplateRepository] backed by [TemplateDao].
- */
 @Singleton
 class TemplateRepositoryImpl @Inject constructor(
     private val templateDao: TemplateDao
 ) : TemplateRepository {
 
     override fun getAllTemplates(): Flow<List<NoteTemplate>> {
-        return templateDao.getAllTemplates().map { list ->
-            list.map { entity ->
-                NoteTemplate(
-                    id = entity.id,
-                    name = entity.name,
-                    description = entity.description,
-                    noteType = try {
-                        NoteType.valueOf(entity.noteType)
-                    } catch (_: Exception) {
-                        NoteType.STANDARD
-                    },
-                    titleTemplate = entity.titleTemplate,
-                    contentJsonTemplate = entity.contentJsonTemplate,
-                    categoryName = entity.categoryName,
-                    isDefault = entity.isDefault
-                )
-            }
-        }
+        return templateDao.getAllTemplates()
+            .map { list -> list.map { it.toDomainModel() } }
+            .flowOn(Dispatchers.IO)
     }
 
     override suspend fun seedDefaultTemplatesIfEmpty() {
@@ -92,16 +77,7 @@ class TemplateRepositoryImpl @Inject constructor(
     }
 
     override suspend fun saveTemplate(template: NoteTemplate): Long {
-        val entity = NoteTemplateEntity(
-            id = template.id,
-            name = template.name,
-            description = template.description,
-            noteType = template.noteType.name,
-            titleTemplate = template.titleTemplate,
-            contentJsonTemplate = template.contentJsonTemplate,
-            categoryName = template.categoryName,
-            isDefault = template.isDefault
-        )
+        val entity = template.toEntity()
         return templateDao.insertTemplate(entity)
     }
 

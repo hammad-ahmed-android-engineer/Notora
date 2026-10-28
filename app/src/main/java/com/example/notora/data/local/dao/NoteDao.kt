@@ -52,21 +52,49 @@ abstract class NoteDao {
         SELECT * FROM notes
         WHERE (:includeTrashed = 1 OR isTrashed = 0)
         AND (:includeArchived = 1 OR isArchived = 0)
-        AND (
-            :query = '' OR
-            title LIKE '%' || :query || '%' OR
-            plainTextContent LIKE '%' || :query || '%'
+        AND id IN (
+            SELECT rowid FROM notes_fts WHERE notes_fts MATCH :query || '*'
+            UNION
+            SELECT id FROM notes WHERE title LIKE '%' || :query || '%' OR plainTextContent LIKE '%' || :query || '%'
+            UNION
+            SELECT noteId FROM note_tag_cross_ref INNER JOIN tags ON note_tag_cross_ref.tagId = tags.id WHERE tags.name LIKE '%' || :query || '%'
         )
         AND (:categoryId IS NULL OR categoryId = :categoryId)
+        AND (:tagId IS NULL OR id IN (SELECT noteId FROM note_tag_cross_ref WHERE tagId = :tagId))
         AND (:noteType IS NULL OR noteType = :noteType)
         AND (:colorHex IS NULL OR colorHex = :colorHex)
         AND (:isPinnedOnly = 0 OR isPinned = 1)
         AND (:isFavoriteOnly = 0 OR isFavorite = 1)
         ORDER BY isPinned DESC, updatedAt DESC
     """)
-    abstract fun searchNotes(
-        query: String = "",
+    abstract fun searchNotesWithQuery(
+        query: String,
         categoryId: Long? = null,
+        tagId: Long? = null,
+        noteType: String? = null,
+        colorHex: String? = null,
+        isPinnedOnly: Int = 0,
+        isFavoriteOnly: Int = 0,
+        includeArchived: Int = 0,
+        includeTrashed: Int = 0
+    ): Flow<List<NoteWithDetails>>
+
+    @Transaction
+    @Query("""
+        SELECT * FROM notes
+        WHERE (:includeTrashed = 1 OR isTrashed = 0)
+        AND (:includeArchived = 1 OR isArchived = 0)
+        AND (:categoryId IS NULL OR categoryId = :categoryId)
+        AND (:tagId IS NULL OR id IN (SELECT noteId FROM note_tag_cross_ref WHERE tagId = :tagId))
+        AND (:noteType IS NULL OR noteType = :noteType)
+        AND (:colorHex IS NULL OR colorHex = :colorHex)
+        AND (:isPinnedOnly = 0 OR isPinned = 1)
+        AND (:isFavoriteOnly = 0 OR isFavorite = 1)
+        ORDER BY isPinned DESC, updatedAt DESC
+    """)
+    abstract fun searchNotesWithoutQuery(
+        categoryId: Long? = null,
+        tagId: Long? = null,
         noteType: String? = null,
         colorHex: String? = null,
         isPinnedOnly: Int = 0,

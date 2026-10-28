@@ -4,6 +4,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import com.example.notora.domain.model.NoteRevision
 
 @Entity(
     tableName = "note_revisions",
@@ -23,4 +24,12 @@ data class NoteRevisionEntity(
     val title: String,
     val contentJson: String,
     val createdAt: Long = System.currentTimeMillis()
+)
+
+fun NoteRevisionEntity.toDomainModel(): NoteRevision = NoteRevision(
+    id = id,
+    noteId = noteId,
+    title = title,
+    contentJson = contentJson,
+    createdAt = createdAt
 )

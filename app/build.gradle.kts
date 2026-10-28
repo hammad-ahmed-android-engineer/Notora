@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.android)
+    id("org.jetbrains.kotlin.plugin.serialization")
     id("com.google.devtools.ksp")
     alias(libs.plugins.hilt)
 }
@@ -16,13 +17,12 @@ android {
         targetSdk = 37
         versionCode = 1
         versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -71,22 +71,13 @@ dependencies {
     // Coil Image Loading
     implementation(libs.coil.compose)
 
-    // Gson JSON Serialization
-    implementation(libs.gson)
+    // KotlinX JSON Serialization
+    implementation(libs.kotlinx.serialization.json)
 
     // SDP & SSP Scalable Units
     implementation(libs.intuit.sdp)
     implementation(libs.intuit.ssp)
 
-    // Testing
-    testImplementation(libs.junit)
-    testImplementation(libs.mockk)
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.androidx.room.testing)
-
-    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    androidTestImplementation(libs.androidx.espresso.core)
-    androidTestImplementation(libs.androidx.junit)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
+    // Compose Tooling Preview
     debugImplementation(libs.androidx.compose.ui.tooling)
 }

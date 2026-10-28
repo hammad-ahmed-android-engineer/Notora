@@ -1,5 +1,8 @@
 package com.example.notora.domain.editor
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class RichTextSpan(
     val start: Int,
     val end: Int,

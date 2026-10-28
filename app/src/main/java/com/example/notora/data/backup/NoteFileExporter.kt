@@ -1,10 +1,11 @@
 package com.example.notora.data.backup
 
-import com.example.notora.common.util.AppUtils
+import com.example.notora.core.utils.AppUtils
 import com.example.notora.domain.editor.RichTextDocument
 import com.example.notora.domain.editor.RichTextSerializer
 import com.example.notora.domain.model.Note
-import com.google.gson.Gson
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -24,7 +25,11 @@ enum class ExportFormat {
 @Singleton
 class NoteFileExporter @Inject constructor() {
 
-    private val gson = Gson()
+    private val jsonFormatter = Json {
+        ignoreUnknownKeys = true
+        encodeDefaults = true
+        isLenient = true
+    }
 
     /**
      * Converts a note and its rich text document into the specified string format.
@@ -35,7 +40,7 @@ class NoteFileExporter @Inject constructor() {
             ExportFormat.TXT -> "${note.title}\n\n${document.text}"
             ExportFormat.MARKDOWN -> "# ${note.title}\n\n${RichTextSerializer.toMarkdown(document)}"
             ExportFormat.HTML -> "<h1>${note.title}</h1>\n${RichTextSerializer.toHtml(document)}"
-            ExportFormat.JSON -> gson.toJson(note)
+            ExportFormat.JSON -> jsonFormatter.encodeToString(note)
         }
     }
 
