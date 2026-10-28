@@ -99,7 +99,7 @@ fun TemplatesScreen(
                         modifier = Modifier.fillMaxWidth(),
                         shape = RoundedCornerShape(AppDimensions.cornerExtraLarge),
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                            containerColor = MaterialTheme.colorScheme.surface
                         ),
                         contentPadding = PaddingValues(AppDimensions.paddingLarge)
                     ) {

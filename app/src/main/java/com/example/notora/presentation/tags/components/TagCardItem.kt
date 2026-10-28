@@ -43,7 +43,7 @@ fun TagCardItem(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(AppDimensions.cornerLarge),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+            containerColor = MaterialTheme.colorScheme.surface
         )
     ) {
         Row(

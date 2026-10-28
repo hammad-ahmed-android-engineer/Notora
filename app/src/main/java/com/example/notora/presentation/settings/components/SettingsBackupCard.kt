@@ -19,7 +19,6 @@ import androidx.compose.ui.res.stringResource
 import com.example.notora.R
 import com.example.notora.core.designsystem.AppDimensions
 import com.example.notora.core.designsystem.AppTypography
-import com.example.notora.core.designsystem.NotoraCyan
 import com.example.notora.core.designsystem.NotoraPrimary
 import com.example.notora.core.designsystem.components.AppButton
 
@@ -55,7 +54,10 @@ fun SettingsBackupCard(
                 text = stringResource(R.string.settings_backup_export),
                 onClick = onExport,
                 leadingIcon = Icons.Default.Download,
-                colors = ButtonDefaults.outlinedButtonColors(contentColor = NotoraPrimary),
+                colors = ButtonDefaults.filledTonalButtonColors(
+                    containerColor = NotoraPrimary.copy(alpha = 0.12f),
+                    contentColor = NotoraPrimary
+                ),
                 modifier = Modifier.weight(1f)
             )
 
@@ -63,7 +65,10 @@ fun SettingsBackupCard(
                 text = stringResource(R.string.settings_backup_import),
                 onClick = onImport,
                 leadingIcon = Icons.Default.Upload,
-                colors = ButtonDefaults.buttonColors(containerColor = NotoraCyan, contentColor = Color.White),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = NotoraPrimary,
+                    contentColor = Color.White
+                ),
                 modifier = Modifier.weight(1f)
             )
         }

@@ -111,9 +111,7 @@ fun NoteRevisionsScreen(
                                 modifier = Modifier.fillMaxWidth(),
                                 shape = RoundedCornerShape(AppDimensions.cornerLarge),
                                 colors = CardDefaults.cardColors(
-                                    containerColor = if (isSelected) NotoraPrimary.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surfaceVariant.copy(
-                                        alpha = 0.5f
-                                    )
+                                    containerColor = if (isSelected) NotoraPrimary.copy(alpha = 0.15f) else MaterialTheme.colorScheme.surface
                                 ),
                                 contentPadding = PaddingValues(AppDimensions.paddingDefault)
                             ) {
@@ -141,7 +139,7 @@ fun NoteRevisionsScreen(
                             .fillMaxHeight(),
                         shape = RoundedCornerShape(AppDimensions.cornerLarge),
                         colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                            containerColor = MaterialTheme.colorScheme.surface
                         )
                     ) {
                         Column(

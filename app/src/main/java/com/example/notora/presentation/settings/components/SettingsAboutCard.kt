@@ -98,6 +98,7 @@ fun SettingsAboutCard(
                 horizontal = AppDimensions.paddingDefault,
                 vertical = AppDimensions.paddingMedium
             ),
+            horizontalArrangement = androidx.compose.foundation.layout.Arrangement.Center,
             modifier = Modifier.fillMaxWidth()
         )
 

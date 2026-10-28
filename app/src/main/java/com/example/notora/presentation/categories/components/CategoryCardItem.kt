@@ -42,13 +42,15 @@ fun CategoryCardItem(
     onDeleteClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val catColor = category.colorHex.parseHexColor(fallback = NotoraPrimary)
+    val rawColor = category.colorHex.parseHexColor(fallback = NotoraPrimary)
+    val luminance = (rawColor.red * 0.299f + rawColor.green * 0.587f + rawColor.blue * 0.114f)
+    val catColor = if (luminance > 0.8f) NotoraPrimary else rawColor
 
     AppCard(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(AppDimensions.cornerLarge),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+            containerColor = MaterialTheme.colorScheme.surface
         )
     ) {
         Row(
@@ -60,7 +62,7 @@ fun CategoryCardItem(
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Surface(
-                    color = catColor.copy(alpha = 0.18f),
+                    color = catColor.copy(alpha = 0.15f),
                     shape = RoundedCornerShape(AppDimensions.cornerMedium),
                     modifier = Modifier.size(AppDimensions.components.searchBarHeight)
                 ) {

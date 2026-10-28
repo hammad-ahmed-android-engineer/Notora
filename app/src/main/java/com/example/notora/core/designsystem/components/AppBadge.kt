@@ -40,6 +40,7 @@ fun AppBadge(
         vertical = AppDimensions.paddingSmall
     ),
     border: BorderStroke? = null,
+    horizontalArrangement: androidx.compose.foundation.layout.Arrangement.Horizontal = androidx.compose.foundation.layout.Arrangement.Start,
     onClick: (() -> Unit)? = null
 ) {
     if (onClick != null) {
@@ -52,7 +53,7 @@ fun AppBadge(
             border = border,
             modifier = modifier
         ) {
-            BadgeContent(text, icon, contentColor, textStyle, contentPadding)
+            BadgeContent(text, icon, contentColor, textStyle, contentPadding, horizontalArrangement)
         }
     } else {
         Surface(
@@ -62,7 +63,7 @@ fun AppBadge(
             border = border,
             modifier = modifier
         ) {
-            BadgeContent(text, icon, contentColor, textStyle, contentPadding)
+            BadgeContent(text, icon, contentColor, textStyle, contentPadding, horizontalArrangement)
         }
     }
 }
@@ -73,11 +74,13 @@ private fun BadgeContent(
     icon: ImageVector?,
     contentColor: Color,
     textStyle: TextStyle,
-    contentPadding: PaddingValues
+    contentPadding: PaddingValues,
+    horizontalArrangement: androidx.compose.foundation.layout.Arrangement.Horizontal
 ) {
     Row(
         modifier = Modifier.padding(contentPadding),
-        verticalAlignment = Alignment.CenterVertically
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = horizontalArrangement
     ) {
         if (icon != null) {
             Icon(
@@ -86,7 +89,7 @@ private fun BadgeContent(
                 tint = contentColor,
                 modifier = Modifier.size(AppDimensions.iconSmall)
             )
-            Spacer(modifier = Modifier.width(AppDimensions.paddingMicro))
+            Spacer(modifier = Modifier.width(AppDimensions.paddingSmall))
         }
         AppText(
             text = text,
